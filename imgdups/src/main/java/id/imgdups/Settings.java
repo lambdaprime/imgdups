@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 jrosclient project
+ * Copyright 2021 imgdups project
  * 
  * Website: https://github.com/lambdaprime/jrosclient
  * 

@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#
+# Copyright 2021 imgdups project
+# 
+# Website: https://github.com/lambdaprime/imgdups
+#
+# Authors:
+# - lambdaprime <intid@protonmail.com>
+#
+
 #set -x
 
 # User can make a symbolic link to the file

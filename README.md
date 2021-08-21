@@ -1,3 +1,5 @@
+**imgdups** - application for finding and removing duplicate images.
+
 # Download
 
 You can download **imgdups** from <https://github.com/lambdaprime/imgdups/releases>
