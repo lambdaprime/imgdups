@@ -15,7 +15,7 @@ To install OpenCV in Linux:
 apt install -y libopencv4.2-java
 ```
 
-For Windows in can be downloaded from (https://opencv.org/)
+For Windows in can be downloaded from <https://opencv.org/>
 
 # Usage
 
@@ -27,30 +27,15 @@ Once scanning completes it will allow you to navigate over the duplicate images 
 
 **imgdups** command accepts following properties which can be used to configure it.
 
-```
--DsignatureLength=NUMBER
-```
-Length of the image signature to use.
+`-DsignatureLength=NUMBER` - length of the image signature to use.
 
-```
--Dthreshold=NUMBER
-```
-Threshold below which to consider two images as duplicates.
+`-Dthreshold=NUMBER` - treshold below which to consider two images as duplicates.
 
-```
--Dsize=NUMBER
-```
-Control resize in comparison algorithm.
+`-Dsize=NUMBER` - control resize in comparison algorithm.
 
-```
--DisDevMode=<true|false>
-```
-Has no special meaning outside of development. When run inside IDE it will run scanning for the predefined "samples" folder (so you don't have to chose it each time).
+`-DisDevMode=<true|false>` - has no special meaning outside of development. When run inside IDE it will run scanning for the predefined "samples" folder (so you don't have to chose it each time).
 
-```
--DqueryImage=<QUERY_IMAGE>
-```
-By default **imgdups** compares all images in the target folder and finds all duplicates. When you need to find duplicates of a single image instead you can use following option where QUERY_IMAGE is an image which duplicates you are trying to find. 
+`-DqueryImage=<QUERY_IMAGE>` - by default **imgdups** compares all images in the target folder and finds all duplicates. When you need to find duplicates of a single image instead you can use following option where QUERY_IMAGE is an image which duplicates you are trying to find. 
 
 # Implementation
 
@@ -63,11 +48,12 @@ Java Image Processing Cookbook by Rafael Santos
 http://www.lac.inpe.br/JIPCookbook/6050-howto-compareimages.jsp
 ```
 
-The algorithm is the following
+The algorithm is the following:
 - resize image to `size`
 - extract `signatureLength` pitches from an image with equal size and equally distributed across the image
 - for each pitch calculate feature vector which is RGB triple of average values for R, G and B (this will give us `signatureLength`x3 feature vector)
-- use FLANN for feature matching
+
+**imgdups** is using FLANN for feature matching.
 
 # Examples
 
