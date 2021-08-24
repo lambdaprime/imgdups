@@ -40,7 +40,7 @@ import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import id.imgdups.Settings;
+import id.imgdups.settings.Settings;
 import id.imgdups.viewer.MatchResultsFrame;
 import id.opencvkit.feature.descriptor.FileDescriptor;
 import id.opencvkit.feature.match.MatchResult;

@@ -41,7 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import id.imgdups.Settings;
+import id.imgdups.settings.Settings;
 import id.xfunction.text.Ellipsizer;
 
 /**

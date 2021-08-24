@@ -19,7 +19,7 @@
  * Authors:
  * - lambdaprime <intid@protonmail.com>
  */
-package id.imgdups;
+package id.imgdups.settings;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
