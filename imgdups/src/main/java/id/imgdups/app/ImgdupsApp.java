@@ -29,6 +29,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -45,9 +47,15 @@ import id.imgdups.viewer.MatchResultsFrame;
 import id.opencvkit.feature.descriptor.FileDescriptor;
 import id.opencvkit.feature.match.MatchResult;
 import id.opencvkit.feature.match.Matchers;
+import id.xfunction.ResourceUtils;
+import id.xfunction.XCollections;
+import id.xfunction.cli.ArgsUtils;
+import id.xfunction.cli.ArgumentParsingException;
 
 public class ImgdupsApp {
 
+    private static final ResourceUtils resourceUtils = new ResourceUtils();
+    private static final ArgsUtils argsUtils = new ArgsUtils();
     private Matchers matchers = new Matchers();
     private Settings settings = Settings.getInstance();
 
@@ -55,6 +63,11 @@ public class ImgdupsApp {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
     
+    private static void usage() {
+        resourceUtils.readResourceAsStream("README.md")
+            .forEach(System.out::println);
+    }
+
     private File choseFolder() {
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -67,6 +80,11 @@ public class ImgdupsApp {
     }
     
     private void run(String[] args) throws Exception {
+        Properties properties = argsUtils.collectOptions(args);
+        if (XCollections.isIntersects(properties.keySet(), Set.of("h", "help"))) {
+            throw new ArgumentParsingException();
+        }
+        settings.update(properties);
         System.out.println(settings);
         var folder = settings.isDevMode()? Paths.get("samples/"): choseFolder().toPath();
         System.out.println("Folder: " + folder.toAbsolutePath());
@@ -81,7 +99,11 @@ public class ImgdupsApp {
     }
     
     public static void main(String[] args) throws Exception {
-        new ImgdupsApp().run(args);
+        try {
+            new ImgdupsApp().run(args);
+        } catch (ArgumentParsingException e) {
+            usage();
+        }
     }
     
     private List<MatchResult<Path>> findSimilar(Optional<Path> query, Path folder) throws IOException {

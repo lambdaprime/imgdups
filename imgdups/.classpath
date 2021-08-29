@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="lib" path="/usr/share/java/opencv.jar"/>
 	<classpathentry kind="lib" path="libs/opencvkit-2.0.jar"/>
 	<classpathentry kind="lib" path="libs/xfunction-12.0.jar"/>

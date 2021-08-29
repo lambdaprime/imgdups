@@ -24,18 +24,22 @@ package id.imgdups.settings;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Properties;
 
 public class Settings {
 
     private static final Settings instance = new Settings();
     
-    private int signatureLength = Integer.parseInt(System.getProperty("signatureLength", "64"));
-    private int threshold = Integer.parseInt(System.getProperty("threshold", "150"));
-    private int size = Integer.parseInt(System.getProperty("size", "300"));
-    private boolean isDevMode = Boolean.parseBoolean(System.getProperty("isDevMode", "false"));
-    private Optional<Path> queryImage = Optional.ofNullable(System.getProperty("queryImage"))
-            .map(Paths::get);
+    private int signatureLength;
+    private int threshold;
+    private int size;
+    private boolean isDevMode;
+    private Optional<Path> queryImage;
 
+    public Settings() {
+        update(System.getProperties());
+    }
+    
     public int getSignatureLength() {
         return signatureLength;
     }
@@ -69,5 +73,14 @@ public class Settings {
         buf.append("queryImage: " + queryImage + "\n");
         buf.append("isDevMode: " + isDevMode + "\n");
         return buf.toString();
+    }
+
+    public void update(Properties properties) {
+        signatureLength = Integer.parseInt(properties.getProperty("signatureLength", "64"));
+        threshold = Integer.parseInt(properties.getProperty("threshold", "150"));
+        size = Integer.parseInt(properties.getProperty("size", "300"));
+        isDevMode = Boolean.parseBoolean(properties.getProperty("isDevMode", "false"));
+        queryImage = Optional.ofNullable(properties.getProperty("queryImage"))
+                .map(Paths::get);
     }
 }

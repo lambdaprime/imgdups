@@ -1,1 +1,2 @@
 include 'imgdups'
+include 'imgdups.tests'

@@ -31,4 +31,4 @@ if [[ "$OS" =~ Windows ]]; then
     CP_SEP=";"
 fi
 
-java -cp "${RUN_PATH}/libs/*:/usr/share/java/*" -Djava.library.path="/usr/lib/jni" "$@" id.imgdups.app.ImgdupsApp
+java -cp "${RUN_PATH}/libs/*:/usr/share/java/*" -Djava.library.path="/usr/lib/jni" id.imgdups.app.ImgdupsApp "$@"

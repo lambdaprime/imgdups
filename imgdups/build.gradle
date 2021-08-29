@@ -40,6 +40,11 @@ task copyLibs(type: Copy) {
     into "${packageDir}/libs"
 }
 
+task copyReadme(type: Copy) {
+    from("${project.rootDir}/README.md")
+    into("$projectDir/src/main/resources")
+}
+
 task createPackage(type: Copy, dependsOn: copyLibs) {
     from "${project.rootDir}/README.md"
     from "${project.rootDir}/LICENSE-2.0.txt"
@@ -52,6 +57,7 @@ task cleanRelease(type: Delete) {
     delete "$projectDir/release"
 }
 
+compileJava.dependsOn copyReadme
 createRelease.dependsOn createPackage, javadoc
 assemble.dependsOn createRelease
 clean.dependsOn cleanRelease
