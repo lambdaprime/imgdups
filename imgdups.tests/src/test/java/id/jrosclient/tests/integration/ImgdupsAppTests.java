@@ -28,14 +28,19 @@
  */
 package id.jrosclient.tests.integration;
 
-import java.io.IOException;
-import java.nio.file.Paths;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import id.xfunction.AssertRunCommand;
+import id.xfunction.nio.file.XFiles;
 
 public class ImgdupsAppTests {
 
@@ -43,25 +48,42 @@ public class ImgdupsAppTests {
             .toAbsolutePath()
             .resolve("build/imgdups/imgdups")
             .toString();
+    private static Path targetFolder;
 
-    @BeforeEach
-    void setup() throws IOException {
-    }
-    
-    @AfterEach
-    void cleanup() throws IOException {
+    @BeforeAll
+    public static void setup() throws IOException {
+        targetFolder = Files.createTempDirectory("imgdups-tests");
+        Path sourceFolder = Paths.get("").resolve("samples/");
+        XFiles.copyRecursively(sourceFolder, targetFolder);
     }
     
     @Test
-    public void test() throws Exception {
-        test_no_args();
-    }
-
-    private void test_no_args() throws Exception {
+    public void test_no_args() throws Exception {
         new AssertRunCommand(COMMAND_PATH, "-h")
                 .withOutputFromResource("test_help")
                 .withReturnCode(0)
                 .run();
+    }
+
+    @Test
+    public void test_hasNoUi() throws Exception {
+        Path dup1 = targetFolder.resolve("111.jpg");
+        Files.copy(targetFolder.resolve("1.jpg"), dup1);
+
+        Path dup2 = targetFolder.resolve("lo/111.jpg");
+        Path folder = targetFolder.resolve("lo");
+        Files.createDirectories(folder);
+        Files.copy(targetFolder.resolve("1.jpg"), dup2);
+        
+        new AssertRunCommand(COMMAND_PATH, "-hasNoUi=true", "-targetFolder=" + targetFolder.toAbsolutePath().toString())
+                .withOutputFromResource("test_hasNoUi")
+                .withOutputConsumer(System.out::println)
+                .withReturnCode(0)
+                .withWildcardMatching()
+                .withInput(Stream.of("yes\n"))
+                .run();
+        assertEquals(false, dup1.toFile().exists());
+        assertEquals(true, dup2.toFile().exists());
     }
 
 }

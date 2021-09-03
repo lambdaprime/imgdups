@@ -35,6 +35,8 @@ public class Settings {
     private int size;
     private boolean isDevMode;
     private Optional<Path> queryImage;
+    private boolean hasNoUi;
+    private Optional<Path> targetFolder;
 
     public Settings() {
         update(System.getProperties());
@@ -64,6 +66,14 @@ public class Settings {
         return isDevMode;
     }
     
+    public boolean hasNoUi() {
+        return hasNoUi;
+    }
+    
+    public Optional<Path> getTargetFolder() {
+        return targetFolder;
+    }
+    
     @Override
     public String toString() {
         var buf = new StringBuilder();
@@ -72,6 +82,8 @@ public class Settings {
         buf.append("size: " + size + "\n");
         buf.append("queryImage: " + queryImage + "\n");
         buf.append("isDevMode: " + isDevMode + "\n");
+        buf.append("targetFolder: " + targetFolder + "\n");
+        buf.append("hasNoUi: " + hasNoUi + "\n");
         return buf.toString();
     }
 
@@ -80,7 +92,10 @@ public class Settings {
         threshold = Integer.parseInt(properties.getProperty("threshold", "150"));
         size = Integer.parseInt(properties.getProperty("size", "300"));
         isDevMode = Boolean.parseBoolean(properties.getProperty("isDevMode", "false"));
+        hasNoUi = Boolean.parseBoolean(properties.getProperty("hasNoUi", "false"));
         queryImage = Optional.ofNullable(properties.getProperty("queryImage"))
+                .map(Paths::get);
+        targetFolder = Optional.ofNullable(properties.getProperty("targetFolder"))
                 .map(Paths::get);
     }
 }
