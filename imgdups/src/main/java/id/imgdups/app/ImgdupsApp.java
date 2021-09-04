@@ -24,7 +24,6 @@ package id.imgdups.app;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,6 +38,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -140,7 +140,7 @@ public class ImgdupsApp {
 
     private void show(List<MatchResult<Path>> matches) {
         var viewer = new MatchResultsFrame(matches);
-        EventQueue.invokeLater(viewer);
+        SwingUtilities.invokeLater(viewer);
     }
     
     public static void main(String[] args) throws Exception {

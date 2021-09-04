@@ -22,26 +22,35 @@
 package id.imgdups.viewer;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import id.opencvkit.feature.match.MatchResult;
+import id.xfunction.lang.XThread;
 
-public class MatchResultsFrame extends JFrame implements ActionListener, Runnable {
+public class MatchResultsFrame extends JFrame implements ActionListener, Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;
     private List<MatchResult<Path>> matches;
     private int cursor;
+    private ImageDetailsPanel imageA;
+    private ImageDetailsPanel imageB;
 
     public MatchResultsFrame(List<MatchResult<Path>> matches) {
         this.matches = matches.stream()
@@ -50,6 +59,7 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
     }
 
     private void showNext() {
+        removeKeyListener(this);
         MatchResult<Path> matchResult = matches.get(cursor++);
         while (!Files.exists(matchResult.getA()) || !Files.exists(matchResult.getB())) {
             if (cursor == matches.size()) return;
@@ -58,10 +68,10 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         System.out.println(matchResult);
         JPanel rootPanel = new JPanel(new BorderLayout());
         
-        var imageA = new ImageDetailsPanel(matchResult.getA());
+        imageA = new ImageDetailsPanel(matchResult.getA());
         imageA.setup();
 
-        var imageB = new ImageDetailsPanel(matchResult.getB());
+        imageB = new ImageDetailsPanel(matchResult.getB());
         imageB.setup();
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -70,21 +80,34 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         splitPane.add(imageA);
         splitPane.add(imageB);
         rootPanel.add(splitPane, BorderLayout.CENTER);
-        
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         var nextButton = new JButton("Next");
+        nextButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 showNext();
             }
         });
+        var label = new JLabel("You can use left/right arrows to delete left/right image and to move to the next match");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bottomPanel.add(label);
         if (cursor < matches.size()) {
-            rootPanel.add(nextButton, BorderLayout.SOUTH);
+            bottomPanel.add(nextButton);
         }
+        rootPanel.add(bottomPanel, BorderLayout.SOUTH);
         setContentPane(rootPanel);
         revalidate();
+        addKeyListener(this);
     }
 
+    private void showNextWithDelay() {
+        if (cursor == matches.size()) return;
+        XThread.sleep(1000);
+        showNext();
+    }
+    
     @Override
     public void run() {
         if (cursor >= matches.size()) return;
@@ -93,12 +116,37 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         setBounds(100, 100, 850, 700);
         setLayout(new BorderLayout());
         showNext();
+        setFocusable(true);
         setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
         
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+            imageA.deleteImageFile();
+            ForkJoinPool.commonPool().submit(this::showNextWithDelay);
+            return;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            imageB.deleteImageFile();
+            ForkJoinPool.commonPool().submit(this::showNextWithDelay);
+            return;
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
 }

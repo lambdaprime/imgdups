@@ -62,6 +62,8 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
     private Settings settings = Settings.getInstance();
     private Path imageFile;
+    private JLabel imageView;
+    private JButton deleteButton;
 
     public ImageDetailsPanel(Path imageFile) {
         super();
@@ -75,7 +77,7 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
             var resolution = String.format("%dx%d px", img.getWidth(), img.getHeight());
             img = resizeImage(img, settings.getSize(), settings.getSize());
             
-            JLabel imageView = new JLabel(new ImageIcon(img));
+            imageView = new JLabel(new ImageIcon(img));
             imageView.setAlignmentX(Component.CENTER_ALIGNMENT);
             imageView.addMouseListener(new MouseAdapter() {
                 @Override
@@ -103,17 +105,11 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
             fileSizeView.setAlignmentX(Component.CENTER_ALIGNMENT);
             add(fileSizeView);
             
-            var deleteButton = new JButton("Delete");
+            deleteButton = new JButton("Delete");
             deleteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    try {
-                        Files.delete(imageFile);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    imageView.setIcon(UIManager.getIcon("FileView.fileIcon"));
-                    deleteButton.setEnabled(false);
+                    deleteImageFile();
                 }
             });
             deleteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -148,6 +144,17 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
         }
         g.drawImage(image, (width - w) / 2, (height - h) / 2, w, h, null);
         return outImage;
+    }
+
+    public void deleteImageFile() {
+        if (!deleteButton.isEnabled()) return;
+        try {
+            Files.delete(imageFile);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+        imageView.setIcon(UIManager.getIcon("FileView.fileIcon"));
+        deleteButton.setEnabled(false);
     }
 
 }
