@@ -59,12 +59,9 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
     }
 
     private void showNext() {
+        if (cursor == matches.size()) return;
         removeKeyListener(this);
-        MatchResult<Path> matchResult = matches.get(cursor++);
-        while (!Files.exists(matchResult.getA()) || !Files.exists(matchResult.getB())) {
-            if (cursor == matches.size()) return;
-            matchResult = matches.get(cursor++);
-        }
+        MatchResult<Path> matchResult = matches.get(cursor);
         System.out.println(matchResult);
         JPanel rootPanel = new JPanel(new BorderLayout());
         
@@ -74,6 +71,19 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         imageB = new ImageDetailsPanel(matchResult.getB());
         imageB.setup();
 
+        if (imageA.getFileSize() < imageB.getFileSize()) 
+            imageB.hightlightFileSize();
+        else
+            imageA.hightlightFileSize();
+        
+        if (imageA.getImageHeight() < imageB.getImageHeight() && imageA.getImageWidth() < imageB.getImageWidth()) 
+            imageB.hightlightResolution();
+        if (imageB.getImageHeight() < imageA.getImageHeight() && imageB.getImageWidth() < imageA.getImageWidth()) 
+            imageA.hightlightResolution();
+
+        JPanel topPanel = buildTopPanel();
+        rootPanel.add(topPanel, BorderLayout.NORTH);
+        
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerSize(2);
         splitPane.setResizeWeight(.5);
@@ -90,9 +100,16 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
                 showNext();
             }
         });
-        var label = new JLabel("You can use left/right arrows to delete left/right image and to move to the next match");
+        var label = new JLabel("<html>You can use left/right arrows to delete left/right image and to move to the next match<br>" +
+                "Use space to move Next</html>");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(label);
+        while (++cursor < matches.size()) {
+            var nextResult = matches.get(cursor);
+            if (Files.exists(nextResult.getA()) && Files.exists(nextResult.getB())) {
+                break;
+            }
+        }
         if (cursor < matches.size()) {
             bottomPanel.add(nextButton);
         }
@@ -100,6 +117,15 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         setContentPane(rootPanel);
         revalidate();
         addKeyListener(this);
+    }
+
+    private JPanel buildTopPanel() {
+        var topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        var label = new JLabel(String.format("Match %d out of %d", cursor + 1, matches.size()));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        topPanel.add(label);
+        return topPanel;
     }
 
     private void showNextWithDelay() {
@@ -140,6 +166,10 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
             imageB.deleteImageFile();
             ForkJoinPool.commonPool().submit(this::showNextWithDelay);
+            return;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            showNext();
             return;
         }
     }

@@ -21,6 +21,7 @@
  */
 package id.imgdups.viewer;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Graphics2D;
@@ -64,6 +65,11 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
     private Path imageFile;
     private JLabel imageView;
     private JButton deleteButton;
+    private int imageHeight;
+    private int imageWidth;
+    private double fileSize;
+    private JLabel fileSizeView;
+    private JLabel resolutionView;
 
     public ImageDetailsPanel(Path imageFile) {
         super();
@@ -71,10 +77,24 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
         this.imageFile = imageFile;
     }
     
+    public double getFileSize() {
+        return fileSize;
+    }
+    
+    public int getImageHeight() {
+        return imageHeight;
+    }
+    
+    public int getImageWidth() {
+        return imageWidth;
+    }
+    
     public void setup() {
         try {
             var img = ImageIO.read(imageFile.toFile());
-            var resolution = String.format("%dx%d px", img.getWidth(), img.getHeight());
+            imageHeight = img.getHeight();
+            imageWidth = img.getWidth();
+            var resolution = String.format("%dx%d px", imageWidth, imageHeight);
             img = resizeImage(img, settings.getSize(), settings.getSize());
             
             imageView = new JLabel(new ImageIcon(img));
@@ -96,12 +116,13 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
             fileNameView.setAlignmentX(Component.CENTER_ALIGNMENT);
             add(fileNameView);
             
-            var resolutionView = new JLabel(resolution);
+            resolutionView = new JLabel(resolution);
             resolutionView.setAlignmentX(Component.CENTER_ALIGNMENT);
             add(resolutionView);
-            String fileSize = String.format("%f MB", Files.size(imageFile) / 1024. / 1024.);
+            fileSize = Files.size(imageFile) / 1024. / 1024.;
+            String fileSizeCaption = String.format("%f MB", fileSize);
             
-            var fileSizeView = new JLabel(fileSize);
+            fileSizeView = new JLabel(fileSizeCaption);
             fileSizeView.setAlignmentX(Component.CENTER_ALIGNMENT);
             add(fileSizeView);
             
@@ -157,4 +178,11 @@ public class ImageDetailsPanel extends JPanel implements ActionListener {
         deleteButton.setEnabled(false);
     }
 
+    public void hightlightFileSize() {
+        fileSizeView.setForeground(Color.blue);
+    }
+
+    public void hightlightResolution() {
+        resolutionView.setForeground(Color.blue);
+    }
 }
