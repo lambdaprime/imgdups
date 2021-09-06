@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/jrosclient
+ * Website: https://github.com/lambdaprime/imgdups
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  * Authors:
  * - lambdaprime <intid@protonmail.com>
  */
-package id.imgdups.viewer;
+package id.imgdups.finddups.viewer;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -42,7 +42,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import id.imgdups.settings.Settings;
+import id.imgdups.finddups.FindDupsSettings;
 import id.xfunction.text.Ellipsizer;
 
 /**
@@ -61,7 +61,7 @@ import id.xfunction.text.Ellipsizer;
 public class ImageDetailsPanel extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
-    private Settings settings = Settings.getInstance();
+    private FindDupsSettings settings = FindDupsSettings.getInstance();
     private Path imageFile;
     private JLabel imageView;
     private JButton deleteButton;

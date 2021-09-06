@@ -19,62 +19,61 @@
  * Authors:
  * - lambdaprime <intid@protonmail.com>
  */
-package id.imgdups.settings;
+package id.imgdups.finddups;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
 
-public class Settings {
+public class FindDupsSettings {
 
-    private static final Settings instance = new Settings();
+    private static final FindDupsSettings instance = new FindDupsSettings();
+    
+    private int signatureLength;
+    private int threshold;
+    private int size;
+    private Optional<Path> queryImage;
 
-    private ActionType action;
-    private boolean isDevMode;
-    private boolean hasNoUi;
-    private Optional<Path> targetFolder;
-
-    public Settings() {
+    public FindDupsSettings() {
         update(System.getProperties());
     }
     
-    public static Settings getInstance() {
+    public static FindDupsSettings getInstance() {
         return instance;
     }
 
-    public ActionType getAction() {
-        return action;
+    public int getSignatureLength() {
+        return signatureLength;
     }
-    
-    public boolean isDevMode() {
-        return isDevMode;
+
+    public int getThreshold() {
+        return threshold;
     }
-    
-    public boolean hasNoUi() {
-        return hasNoUi;
+
+    public int getSize() {
+        return size;
     }
-    
-    public Optional<Path> getTargetFolder() {
-        return targetFolder;
+
+    public Optional<Path> getQueryImage() {
+        return queryImage;
     }
     
     @Override
     public String toString() {
         var buf = new StringBuilder();
-        buf.append("action: " + action + "\n");
-        buf.append("isDevMode: " + isDevMode + "\n");
-        buf.append("targetFolder: " + targetFolder + "\n");
-        buf.append("hasNoUi: " + hasNoUi + "\n");
+        buf.append("signatureLength: " + signatureLength + "\n");
+        buf.append("threshold: " + threshold + "\n");
+        buf.append("size: " + size + "\n");
+        buf.append("queryImage: " + queryImage + "\n");
         return buf.toString();
     }
 
     public void update(Properties properties) {
-        action = ActionType.valueOf(properties.getProperty("action", "FIND_DUPS"));
-        isDevMode = Boolean.parseBoolean(properties.getProperty("isDevMode", "false"));
-        hasNoUi = Boolean.parseBoolean(properties.getProperty("hasNoUi", "false"));
-        targetFolder = Optional.ofNullable(properties.getProperty("targetFolder"))
+        signatureLength = Integer.parseInt(properties.getProperty("signatureLength", "64"));
+        threshold = Integer.parseInt(properties.getProperty("threshold", "150"));
+        size = Integer.parseInt(properties.getProperty("size", "300"));
+        queryImage = Optional.ofNullable(properties.getProperty("queryImage"))
                 .map(Paths::get);
     }
-    
 }

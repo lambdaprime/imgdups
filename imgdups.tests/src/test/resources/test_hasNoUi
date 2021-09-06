@@ -1,12 +1,15 @@
-signatureLength: 64
-threshold: 150
-size: 300
-queryImage: Optional.empty
+action: FIND_DUPS
 isDevMode: false
 targetFolder: Optional[*]
 hasNoUi: true
 
 Folder: *
+Finding duplicates
+signatureLength: 64
+threshold: 150
+size: 300
+queryImage: Optional.empty
+
 Extracting descriptors for */brightness-100.jpg
 Extracting descriptors for */contrast-70.jpg
 Extracting descriptors for */brightness-contrast-50.jpg

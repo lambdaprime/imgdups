@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/jrosclient
+ * Website: https://github.com/lambdaprime/imgdups
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
  * Authors:
  * - lambdaprime <intid@protonmail.com>
  */
-package id.imgdups.app;
+package id.imgdups.finddups;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
