@@ -66,7 +66,7 @@ public class ImgdupsAppTests {
     }
 
     @Test
-    public void test_hasNoUi() throws Exception {
+    public void test_finddups() throws Exception {
         Path dup1 = targetFolder.resolve("111.jpg");
         Files.copy(targetFolder.resolve("1.jpg"), dup1);
 
@@ -76,7 +76,7 @@ public class ImgdupsAppTests {
         Files.copy(targetFolder.resolve("1.jpg"), dup2);
         
         new AssertRunCommand(COMMAND_PATH, "-hasNoUi=true", "-targetFolder=" + targetFolder.toAbsolutePath().toString())
-                .withOutputFromResource("test_hasNoUi")
+                .withOutputFromResource("test_finddups")
                 .withOutputConsumer(System.out::println)
                 .withReturnCode(0)
                 .withWildcardMatching()
@@ -86,4 +86,19 @@ public class ImgdupsAppTests {
         assertEquals(true, dup2.toFile().exists());
     }
 
+    @Test
+    public void test_scaleimages() throws Exception {
+        new AssertRunCommand(COMMAND_PATH, "-action=scale_images",
+                "-targetFolder=" + targetFolder.toAbsolutePath().toString(),
+                "-sourceResolution=1030x700")
+        
+                .withOutputFromResource("test_scale_images")
+                .withOutputConsumer(System.out::println)
+                .withReturnCode(0)
+                .withWildcardMatching()
+                .withInput(Stream.of("yes\n"))
+                .run();
+        assertEquals(75089, targetFolder.resolve("1_scaled.jpg").toFile().length());
+        assertEquals(54911, targetFolder.resolve("brightness-100_scaled.jpg").toFile().length());
+    }
 }

@@ -27,15 +27,29 @@ Once scanning completes it will allow you to navigate over the duplicate images 
 
 **imgdups** command accepts following properties which can be used to configure it.
 
-`-signatureLength=NUMBER` - length of the image signature to use.
+## General
 
-`-threshold=NUMBER` - treshold below which to consider two images as duplicates.
+`-action=<find_dups|scale_images>` - specifies what action should be performed. Each action has its own set of properties which can be configured. This property is optional (default action is `find_dups`)
 
-`-size=NUMBER` - control resize in comparison algorithm.
+`-isDevMode=<true|false>` - has no special meaning outside of development. When run inside IDE it will run scanning for the predefined "samples" folder (so you don't have to chose it each time). This property is optional (default is `false`)
 
-`-isDevMode=<true|false>` - has no special meaning outside of development. When run inside IDE it will run scanning for the predefined "samples" folder (so you don't have to chose it each time).
+`-queryImage=<QUERY_IMAGE>` - by default **imgdups** compares all images in the target folder and finds all duplicates. When you need to find duplicates of a single image instead you can use following option where QUERY_IMAGE is an image which duplicates you are trying to find. This property is optional.
 
-`-queryImage=<QUERY_IMAGE>` - by default **imgdups** compares all images in the target folder and finds all duplicates. When you need to find duplicates of a single image instead you can use following option where QUERY_IMAGE is an image which duplicates you are trying to find. 
+## finddups
+
+`-signatureLength=NUMBER` - length of the image signature to use. This property is optional.
+
+`-threshold=NUMBER` - treshold below which to consider two images as duplicates. This property is optional.
+
+`-size=NUMBER` - control resize in comparison algorithm. This property is optional.
+
+## scale_images
+
+`-sourceResolution=<RESOLUTION>` - images with what resolution to scale. This property is optional (default is `3920x2204`)
+
+`-scalePercent=NUMBER` - percentage by which images will be scaled. This property is optional (default is `70` which means that they will be reduced in size)
+
+`isCommutative=<true|false>` - by default resolution of images need to match sourceResolution exactly. For example if the image is 123x456 and sourceResolution is 456x123 then image will not be scaled. This property allows to make resolution matching commutative so that images with 123x456 and 456x123 will be scaled. This property is optional (default is `false`)
 
 # Implementation
 
@@ -67,6 +81,11 @@ Overwrite parameters:
 
 ``` bash
 imgdups -threshold=300 -signatureLength=16
+```
+Scale all images with resolution 1030x700 in the folder ~/Photos by 70%:
+
+``` bash
+imgdups -action=scale_images -targetFolder=/google_drive/photos -sourceResolution=1030x700
 ```
 
 # Contributors

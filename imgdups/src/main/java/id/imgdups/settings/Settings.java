@@ -70,7 +70,7 @@ public class Settings {
     }
 
     public void update(Properties properties) {
-        action = ActionType.valueOf(properties.getProperty("action", "FIND_DUPS"));
+        action = ActionType.valueOf(properties.getProperty("action", "FIND_DUPS").toUpperCase());
         isDevMode = Boolean.parseBoolean(properties.getProperty("isDevMode", "false"));
         hasNoUi = Boolean.parseBoolean(properties.getProperty("hasNoUi", "false"));
         targetFolder = Optional.ofNullable(properties.getProperty("targetFolder"))

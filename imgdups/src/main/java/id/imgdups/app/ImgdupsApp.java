@@ -30,6 +30,7 @@ import java.util.Set;
 import javax.swing.JFileChooser;
 
 import id.imgdups.finddups.FindDups;
+import id.imgdups.scale.ScaleImages;
 import id.imgdups.settings.Settings;
 import id.xfunction.ResourceUtils;
 import id.xfunction.cli.ArgsUtils;
@@ -76,6 +77,9 @@ public class ImgdupsApp {
         switch (settings.getAction()) {
         case FIND_DUPS:
             new FindDups(cli, properties).run(folder);
+            break;
+        case SCALE_IMAGES:
+            new ScaleImages(cli, properties).run(folder);
             break;
         }
     }

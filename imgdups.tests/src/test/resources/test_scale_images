@@ -1,0 +1,22 @@
+action: SCALE_IMAGES
+isDevMode: false
+targetFolder: Optional[*]
+hasNoUi: false
+
+Folder: *
+Scale images
+sourceHeight: 700
+sourceWidth: 1030
+scalePercent: 70
+isCommutative: false
+
+Target size of the longest side of the image will be <721x489>
+Proceed?
+Please confirm [yes/no]: Scaling image */brightness-100.jpg
+Scaling image */contrast-70.jpg
+Scaling image */brightness-contrast-50.jpg
+Scaling image */lo/111.jpg
+Scaling image */1.jpg
+Scaling image */inverted.jpg
+
+

@@ -2,5 +2,6 @@ package id.imgdups.settings;
 
 public enum ActionType {
 
-    FIND_DUPS
+    FIND_DUPS,
+    SCALE_IMAGES
 }
