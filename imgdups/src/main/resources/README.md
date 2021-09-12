@@ -2,7 +2,9 @@
 
 # Download
 
-You can download **imgdups** from <https://github.com/lambdaprime/imgdups/releases>
+You can download **imgdups** release versions from <https://github.com/lambdaprime/imgdups/releases>
+
+Latest prerelease version can be found here <https://github.com/lambdaprime/imgdups/tree/main/imgdups/release>
 
 # Requirements
 
