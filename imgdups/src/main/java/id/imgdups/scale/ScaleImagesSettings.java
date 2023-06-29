@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
 package id.imgdups.scale;
 
 import java.util.Properties;
@@ -26,7 +22,7 @@ import java.util.Properties;
 public class ScaleImagesSettings {
 
     private static final ScaleImagesSettings instance = new ScaleImagesSettings();
-    
+
     private int sourceWidth;
     private int sourceHeight;
     private int scalePercent;
@@ -35,7 +31,7 @@ public class ScaleImagesSettings {
     public ScaleImagesSettings() {
         update(System.getProperties());
     }
-    
+
     public static ScaleImagesSettings getInstance() {
         return instance;
     }
@@ -55,7 +51,7 @@ public class ScaleImagesSettings {
     public boolean isCommutative() {
         return isCommutative;
     }
-    
+
     @Override
     public String toString() {
         var buf = new StringBuilder();

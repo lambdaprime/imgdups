@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
 package id.imgdups.finddups;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
 
 import id.opencvkit.OpencvKit;
 import id.opencvkit.SubmatrixDetector;
 import id.opencvkit.feature.detector.OddPatchesFeatureDetector;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
 
 public class RgbMeanDescriptorExtractor implements Function<Mat, Mat> {
-    
+
     private int descriptorLen;
 
     public RgbMeanDescriptorExtractor(int descriptorLen) {
@@ -42,13 +36,13 @@ public class RgbMeanDescriptorExtractor implements Function<Mat, Mat> {
 
     @Override
     public Mat apply(Mat mat) {
-        var means = Stream.of(mat)
-                .flatMap(new OddPatchesFeatureDetector(descriptorLen))
-                //.limit(1)
-                .peek(new SubmatrixDetector(mat))
-                .map(patch -> Core.mean(patch))
-                .collect(Collectors.toList());
+        var means =
+                Stream.of(mat)
+                        .flatMap(new OddPatchesFeatureDetector(descriptorLen))
+                        // .limit(1)
+                        .peek(new SubmatrixDetector(mat))
+                        .map(patch -> Core.mean(patch))
+                        .collect(Collectors.toList());
         return OpencvKit.toFlatMatrix(means);
     }
-    
 }

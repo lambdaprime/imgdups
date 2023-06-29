@@ -1,7 +1,7 @@
 /*
- * Copyright 2020 jrosclient project
+ * Copyright 2020 imgdups project
  * 
- * Website: https://github.com/lambdaprime/jrosclient
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,39 +15,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
-/**
- * Copyright 2020 lambdaprime
- * 
- * Email: intid@protonmail.com 
- * Website: https://github.com/lambdaprime
- * 
- */
 package id.jrosclient.tests.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import id.xfunction.AssertRunCommand;
+import id.xfunction.nio.file.XFiles;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import id.xfunction.AssertRunCommand;
-import id.xfunction.nio.file.XFiles;
-
+/**
+ * @author lambdaprime <intid@protonmail.com>
+ */
 public class ImgdupsAppTests {
 
-    private static final String COMMAND_PATH = Paths.get("")
-            .toAbsolutePath()
-            .resolve("build/imgdups/imgdups")
-            .toString();
+    private static final String COMMAND_PATH =
+            Paths.get("").toAbsolutePath().resolve("build/imgdups/imgdups").toString();
     private static Path targetFolder;
 
     @BeforeAll
@@ -56,7 +44,7 @@ public class ImgdupsAppTests {
         Path sourceFolder = Paths.get("").resolve("samples/");
         XFiles.copyRecursively(sourceFolder, targetFolder);
     }
-    
+
     @Test
     public void test_no_args() throws Exception {
         new AssertRunCommand(COMMAND_PATH, "-h")
@@ -74,8 +62,11 @@ public class ImgdupsAppTests {
         Path folder = targetFolder.resolve("lo");
         Files.createDirectories(folder);
         Files.copy(targetFolder.resolve("1.jpg"), dup2);
-        
-        new AssertRunCommand(COMMAND_PATH, "-hasNoUi=true", "-targetFolder=" + targetFolder.toAbsolutePath().toString())
+
+        new AssertRunCommand(
+                        COMMAND_PATH,
+                        "-hasNoUi=true",
+                        "-targetFolder=" + targetFolder.toAbsolutePath().toString())
                 .withOutputFromResource("test_finddups")
                 .withOutputConsumer(System.out::println)
                 .withReturnCode(0)
@@ -88,10 +79,11 @@ public class ImgdupsAppTests {
 
     @Test
     public void test_scaleimages() throws Exception {
-        new AssertRunCommand(COMMAND_PATH, "-action=scale_images",
-                "-targetFolder=" + targetFolder.toAbsolutePath().toString(),
-                "-sourceResolution=1030x700")
-        
+        new AssertRunCommand(
+                        COMMAND_PATH,
+                        "-action=scale_images",
+                        "-targetFolder=" + targetFolder.toAbsolutePath().toString(),
+                        "-sourceResolution=1030x700")
                 .withOutputFromResource("test_scale_images")
                 .withOutputConsumer(System.out::println)
                 .withReturnCode(0)

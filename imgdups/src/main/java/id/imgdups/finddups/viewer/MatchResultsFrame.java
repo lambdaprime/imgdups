@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
 package id.imgdups.finddups.viewer;
 
+import id.opencvkit.feature.match.MatchResult;
+import id.xfunction.lang.XThread;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -33,7 +31,6 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -41,9 +38,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import id.opencvkit.feature.match.MatchResult;
-import id.xfunction.lang.XThread;
-
+/**
+ * @author lambdaprime <intid@protonmail.com>
+ */
 public class MatchResultsFrame extends JFrame implements ActionListener, Runnable, KeyListener {
 
     private static final long serialVersionUID = 1L;
@@ -53,9 +50,10 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
     private ImageDetailsPanel imageB;
 
     public MatchResultsFrame(List<MatchResult<Path>> matches) {
-        this.matches = matches.stream()
-                .filter(Predicate.not(MatchResult::isIdentical))
-                .collect(Collectors.toList());
+        this.matches =
+                matches.stream()
+                        .filter(Predicate.not(MatchResult::isIdentical))
+                        .collect(Collectors.toList());
     }
 
     private void showNext() {
@@ -64,26 +62,24 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         MatchResult<Path> matchResult = matches.get(cursor);
         System.out.println(matchResult);
         JPanel rootPanel = new JPanel(new BorderLayout());
-        
+
         imageA = new ImageDetailsPanel(matchResult.getA());
         imageA.setup();
 
         imageB = new ImageDetailsPanel(matchResult.getB());
         imageB.setup();
 
-        if (imageA.getFileSize() < imageB.getFileSize()) 
-            imageB.hightlightFileSize();
-        else
-            imageA.hightlightFileSize();
-        
-        if (imageA.getImageHeight() < imageB.getImageHeight() && imageA.getImageWidth() < imageB.getImageWidth()) 
-            imageB.hightlightResolution();
-        if (imageB.getImageHeight() < imageA.getImageHeight() && imageB.getImageWidth() < imageA.getImageWidth()) 
-            imageA.hightlightResolution();
+        if (imageA.getFileSize() < imageB.getFileSize()) imageB.hightlightFileSize();
+        else imageA.hightlightFileSize();
+
+        if (imageA.getImageHeight() < imageB.getImageHeight()
+                && imageA.getImageWidth() < imageB.getImageWidth()) imageB.hightlightResolution();
+        if (imageB.getImageHeight() < imageA.getImageHeight()
+                && imageB.getImageWidth() < imageA.getImageWidth()) imageA.hightlightResolution();
 
         JPanel topPanel = buildTopPanel();
         rootPanel.add(topPanel, BorderLayout.NORTH);
-        
+
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerSize(2);
         splitPane.setResizeWeight(.5);
@@ -94,14 +90,17 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         var nextButton = new JButton("Next");
         nextButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        nextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showNext();
-            }
-        });
-        var label = new JLabel("<html>You can use left/right arrows to delete left/right image and to move to the next match<br>" +
-                "Use space to move Next</html>");
+        nextButton.addActionListener(
+                new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        showNext();
+                    }
+                });
+        var label =
+                new JLabel(
+                        "<html>You can use left/right arrows to delete left/right image and to move"
+                                + " to the next match<br>Use space to move Next</html>");
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(label);
         while (++cursor < matches.size()) {
@@ -133,7 +132,7 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         XThread.sleep(1000);
         showNext();
     }
-    
+
     @Override
     public void run() {
         if (cursor >= matches.size()) return;
@@ -147,14 +146,10 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
     }
 
     @Override
-    public void actionPerformed(ActionEvent arg0) {
-        
-    }
+    public void actionPerformed(ActionEvent arg0) {}
 
     @Override
-    public void keyTyped(KeyEvent e) {
-        
-    }
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -175,8 +170,5 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
-
+    public void keyReleased(KeyEvent e) {}
 }

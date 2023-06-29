@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
 package id.imgdups.scale;
 
+import id.xfunction.cli.CommandLineInterface;
+import id.xfunction.nio.file.XPaths;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
-import id.xfunction.cli.CommandLineInterface;
-import id.xfunction.nio.file.XPaths;
 
 public class ScaleImages {
 
@@ -51,19 +45,19 @@ public class ScaleImages {
         this.cli = cli;
         settings.update(properties);
     }
-    
+
     public void run(Path folder) throws Exception {
         cli.print("Scale images");
         cli.print(settings);
         var ratio = settings.getScalePercent() / 100.;
         var newHeight = settings.getSourceHeight() * ratio;
         var newWidth = settings.getSourceWidth() * ratio;
-        cli.print("Target size of the longest side of the image will be <%dx%d>", (int)newWidth, (int)newHeight);
+        cli.print(
+                "Target size of the longest side of the image will be <%dx%d>",
+                (int) newWidth, (int) newHeight);
         targetSize = new Size(newWidth, newHeight);
         if (!cli.askConfirm("Proceed?")) return;
-        Files.walk(folder)
-            .filter(p -> !p.toFile().isDirectory())
-            .forEach(this::resize);
+        Files.walk(folder).filter(p -> !p.toFile().isDirectory()).sorted().forEach(this::resize);
     }
 
     private void resize(Path path) {
@@ -89,19 +83,17 @@ public class ScaleImages {
         var newFileName = fileName[0] + "_scaled." + fileName[1];
         String outputFile = path.resolveSibling(newFileName).toAbsolutePath().toString();
         switch (fileName[1].toLowerCase()) {
-        case "jpg":
-            Imgcodecs.imwrite(outputFile, img, new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 80));
-            break;
-        default:
-            Imgcodecs.imwrite(outputFile, img);
+            case "jpg":
+                Imgcodecs.imwrite(
+                        outputFile, img, new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 80));
+                break;
+            default:
+                Imgcodecs.imwrite(outputFile, img);
         }
     }
 
     private static Mat readRgbImage(Path path) {
-        var img = Imgcodecs.imread(path.toAbsolutePath().toString(),
-                Imgcodecs.IMREAD_COLOR);
+        var img = Imgcodecs.imread(path.toAbsolutePath().toString(), Imgcodecs.IMREAD_COLOR);
         return img;
     }
-
-
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,15 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
 package id.imgdups.finddups;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
+import id.imgdups.finddups.viewer.MatchResultsFrame;
+import id.imgdups.settings.Settings;
+import id.opencvkit.feature.descriptor.FileDescriptor;
+import id.opencvkit.feature.match.MatchResult;
+import id.opencvkit.feature.match.Matchers;
+import id.xfunction.cli.CommandLineInterface;
+import id.xfunction.function.Unchecked;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,22 +36,12 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import javax.swing.SwingUtilities;
-
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-
-import id.imgdups.finddups.viewer.MatchResultsFrame;
-import id.imgdups.settings.Settings;
-import id.opencvkit.feature.descriptor.FileDescriptor;
-import id.opencvkit.feature.match.MatchResult;
-import id.opencvkit.feature.match.Matchers;
-import id.xfunction.cli.CommandLineInterface;
-import id.xfunction.function.Unchecked;
 
 public class FindDups {
 
@@ -65,7 +58,7 @@ public class FindDups {
         this.cli = cli;
         settings.update(properties);
     }
-    
+
     public void run(Path folder) throws Exception {
         cli.print("Finding duplicates");
         cli.print(settings);
@@ -88,16 +81,16 @@ public class FindDups {
             identical.add(result);
         }
         if (identical.isEmpty()) return;
-        
+
         cli.print("Identical files detected:");
         cli.print(identical.stream().map(MatchResult::toString).collect(joining("\n")));
         cli.print("");
-        
+
         var delete = identical.stream().map(MatchResult<Path>::getB).collect(toList());
         cli.print("Identical files to be deleted:");
         cli.print(delete.stream().map(Path::toString).collect(joining("\n")));
         cli.print("");
-        
+
         if (cli.askConfirm("Delete identical files?")) {
             delete.stream().forEach(Unchecked.wrapAccept(Files::delete));
         }
@@ -107,18 +100,18 @@ public class FindDups {
         var viewer = new MatchResultsFrame(matches);
         SwingUtilities.invokeLater(viewer);
     }
-    
-    private List<MatchResult<Path>> findSimilar(Optional<Path> query, Path folder) throws IOException {
+
+    private List<MatchResult<Path>> findSimilar(Optional<Path> query, Path folder)
+            throws IOException {
         List<FileDescriptor> trainDescriptors = extractDescriptors(folder);
         List<FileDescriptor> queryDescriptors = trainDescriptors;
         if (query.isPresent()) {
-            queryDescriptors = List.of(query.map(this::extractDescriptor)
-                    .map(Optional::get).get());
+            queryDescriptors = List.of(query.map(this::extractDescriptor).map(Optional::get).get());
         }
 
         System.out.format("Descriptors found: %d\n", trainDescriptors.size());
 
-        return matchers.matchRadius(queryDescriptors, trainDescriptors, settings.getThreshold()); 
+        return matchers.matchRadius(queryDescriptors, trainDescriptors, settings.getThreshold());
     }
 
     private Optional<FileDescriptor> extractDescriptor(Path path) {
@@ -132,19 +125,18 @@ public class FindDups {
     }
 
     private static Mat readRgbImage(Path path) {
-        var img = Imgcodecs.imread(path.toAbsolutePath().toString(),
-                Imgcodecs.IMREAD_COLOR);
+        var img = Imgcodecs.imread(path.toAbsolutePath().toString(), Imgcodecs.IMREAD_COLOR);
         return img;
     }
 
     private List<FileDescriptor> extractDescriptors(Path folder) throws IOException {
         return Files.walk(folder)
                 .filter(p -> !p.toFile().isDirectory())
+                .sorted()
                 .map(this::extractDescriptor)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(Predicate.not(Mat::empty))
                 .collect(Collectors.toList());
     }
-
 }

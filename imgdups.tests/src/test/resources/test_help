@@ -1,14 +1,8 @@
 **imgdups** - application for finding and removing duplicate images.
 
-# Download
-
-You can download **imgdups** release versions from <https://github.com/lambdaprime/imgdups/releases>
-
-Latest prerelease version can be found here <https://github.com/lambdaprime/imgdups/tree/main/imgdups/release>
-
 # Requirements
 
-- Java 11
+- Java 17+
 - OpenCV >= 4.2
 
 To install OpenCV in Linux:
@@ -18,6 +12,10 @@ apt install -y libopencv4.2-java
 ```
 
 For Windows in can be downloaded from <https://opencv.org/>
+
+# Download
+
+[Release versions](imgdups/release/CHANGELOG.md)
 
 # Usage
 

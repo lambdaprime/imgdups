@@ -10,19 +10,19 @@ threshold: 150
 size: 300
 queryImage: Optional.empty
 
-Extracting descriptors for */brightness-100.jpg
-Extracting descriptors for */contrast-70.jpg
-Extracting descriptors for */brightness-contrast-50.jpg
-Extracting descriptors for */111.jpg
-Extracting descriptors for */30pt.jpg
-Extracting descriptors for */lo/111.jpg
-Extracting descriptors for */crop1.jpg
 Extracting descriptors for */1.jpg
-Extracting descriptors for */inverted.jpg
-Extracting descriptors for */crop1-50pt.jpg
-Extracting descriptors for */75pt.jpg
-Extracting descriptors for */60pt.jpg
+Extracting descriptors for */111.jpg
 Extracting descriptors for */15pt.jpg
+Extracting descriptors for */30pt.jpg
+Extracting descriptors for */60pt.jpg
+Extracting descriptors for */75pt.jpg
+Extracting descriptors for */brightness-100.jpg
+Extracting descriptors for */brightness-contrast-50.jpg
+Extracting descriptors for */contrast-70.jpg
+Extracting descriptors for */crop1-50pt.jpg
+Extracting descriptors for */crop1.jpg
+Extracting descriptors for */inverted.jpg
+Extracting descriptors for */lo/111.jpg
 Descriptors found: 13
 
 Identical files detected:

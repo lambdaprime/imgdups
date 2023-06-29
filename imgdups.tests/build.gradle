@@ -1,26 +1,29 @@
-// Requires gradle 5.4
-// gradle clean test
-
 plugins {
-    id 'java'
+  id 'com.diffplug.spotless'
+  id 'jacoco'
 }
 
-apply plugin : 'eclipse'
-
-repositories {
-    mavenCentral()
-    mavenLocal()
+eclipse.classpath.file {
+  // instruct eclipse plugin to put everything to module path
+  whenMerged {
+    entries.findAll { it.kind == 'lib' }.each { it.entryAttributes['module'] = 'true' }
+  }
 }
 
 dependencies {
-    testImplementation project(':imgdups')
-    testImplementation('org.junit.jupiter:junit-jupiter-api:5.4.2')
-    testImplementation('org.junit.jupiter:junit-jupiter-params:5.4.2')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.2')
+  testImplementation project(':imgdups')
+
+  def junitVersion = "5.8.1"
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+  testImplementation "org.junit.jupiter:junit-jupiter-params:${junitVersion}"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
+  testRuntimeOnly "org.junit.platform:junit-platform-commons:1.7.0"
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+jacoco {
+  // Java 17 support
+  toolVersion = "0.8.7"
+}
 
 String testDir = "$buildDir/${projectName}"
 String testSrcDir = "$projectDir/src/test"
@@ -32,12 +35,52 @@ task myTestCopy(type: Copy) {
     into "$buildDir"
 }
 
-java {
-    modularity.inferModulePath = true
-}
-
 test {
-    useJUnitPlatform()
+  useJUnitPlatform()
+  finalizedBy jacocoTestReport, jacocoTestCoverageVerification
+
+  testLogging {
+    events "started", "failed"
+  }
 }
 
-test.dependsOn myTestCopy
+jacocoTestReport {
+  // generate only HTML report
+  reports {
+    xml.required = false
+    csv.required = false
+    html.required = true
+  }
+  sourceDirectories.from = project(':imgdups').sourceSets.main.java.srcDirs
+  classDirectories.from = project(':imgdups').sourceSets.main.java.classesDirectory
+}
+
+jacocoTestCoverageVerification {
+  sourceDirectories.from = project(':imgdups').sourceSets.main.java.srcDirs
+  classDirectories.from = project(':imgdups').sourceSets.main.java.classesDirectory
+  afterEvaluate {
+    classDirectories.setFrom(files(classDirectories.files.collect {
+      fileTree(dir: it, exclude:  [
+        // none
+      ])
+    }))
+  }
+  violationRules {
+    rule {
+      enabled = true
+      element = 'PACKAGE'
+      limit {
+        counter = 'LINE'
+        value = 'COVEREDRATIO'
+        minimum = 0.0
+      }
+    }
+  }
+}
+
+// run spotless and format code before the build
+testClasses.dependsOn spotlessApply
+myTestCopy.dependsOn project(':imgdups').createRelease
+
+compileTestJava.dependsOn myTestCopy
+jar.dependsOn myTestCopy

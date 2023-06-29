@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
- */
 package id.imgdups.finddups;
 
 import java.nio.file.Path;
@@ -26,10 +22,13 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Properties;
 
+/**
+ * @author lambdaprime <intid@protonmail.com>
+ */
 public class FindDupsSettings {
 
     private static final FindDupsSettings instance = new FindDupsSettings();
-    
+
     private int signatureLength;
     private int threshold;
     private int size;
@@ -38,7 +37,7 @@ public class FindDupsSettings {
     public FindDupsSettings() {
         update(System.getProperties());
     }
-    
+
     public static FindDupsSettings getInstance() {
         return instance;
     }
@@ -58,7 +57,7 @@ public class FindDupsSettings {
     public Optional<Path> getQueryImage() {
         return queryImage;
     }
-    
+
     @Override
     public String toString() {
         var buf = new StringBuilder();
@@ -73,7 +72,6 @@ public class FindDupsSettings {
         signatureLength = Integer.parseInt(properties.getProperty("signatureLength", "64"));
         threshold = Integer.parseInt(properties.getProperty("threshold", "150"));
         size = Integer.parseInt(properties.getProperty("size", "300"));
-        queryImage = Optional.ofNullable(properties.getProperty("queryImage"))
-                .map(Paths::get);
+        queryImage = Optional.ofNullable(properties.getProperty("queryImage")).map(Paths::get);
     }
 }

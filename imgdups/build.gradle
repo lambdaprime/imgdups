@@ -1,27 +1,35 @@
-// Requires gradle 6.5
-// gradle clean build
-
 plugins {
-    id 'java'
+  id 'com.diffplug.spotless'
+  id 'java'
 }
 
-repositories {
-    mavenCentral()
+apply plugin : 'eclipse'
+
+eclipse.classpath.file {
+  // instruct eclipse plugin to put everything to module path
+  whenMerged {
+    entries.findAll { it.kind == 'lib' }.each { it.entryAttributes['module'] = 'true' }
+  }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile fileTree(include: ['*.jar'], dir: '/usr/share/java')
+  implementation fileTree(include: ['*.jar'], dir: 'libs')
+  implementation fileTree(include: ['*.jar'], dir: '/usr/share/java')
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+configurations {
+  customConfig.extendsFrom implementation
+}
 
-jar { 
-    manifest { 
-        attributes 'Implementation-Version': "${rootProject.version}",
-                   'Main-Class': 'id.imgdups.app.ImgdupsApp'
-    }
+jar {
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  manifest { 
+    attributes 'Implementation-Version': "${rootProject.version}",
+      'Main-Class': 'id.imgdups.app.ImgdupsApp'
+  }
+  from {
+    configurations.customConfig.collect { it.isDirectory() ? it : zipTree(it) }
+  }
 }
 
 def packageDir = "$buildDir/package/${projectName}"
@@ -41,8 +49,8 @@ task copyLibs(type: Copy) {
 }
 
 task copyReadme(type: Copy) {
-    from("${project.rootDir}/README.md")
-    into("$projectDir/src/main/resources")
+  from("${project.rootDir}/README.md")
+  into("$buildDir/resources/main")
 }
 
 task createPackage(type: Copy, dependsOn: copyLibs) {
@@ -53,11 +61,13 @@ task createPackage(type: Copy, dependsOn: copyLibs) {
 }
 
 task cleanRelease(type: Delete) {
-    delete "$packageDir"
-    delete "$projectDir/release"
+  delete "$packageDir"
+  delete "$projectDir/release/*-SNAPSHOT.zip"
 }
 
-compileJava.dependsOn copyReadme
-createRelease.dependsOn createPackage, javadoc
+jar.dependsOn copyReadme
+createRelease.dependsOn createPackage
 assemble.dependsOn createRelease
 clean.dependsOn cleanRelease
+// run spotless and format code before the build
+classes.dependsOn spotlessApply

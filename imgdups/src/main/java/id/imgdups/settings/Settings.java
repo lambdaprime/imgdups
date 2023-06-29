@@ -1,7 +1,7 @@
 /*
  * Copyright 2021 imgdups project
  * 
- * Website: https://github.com/lambdaprime/imgdups
+ * Website: https://github.com/lambdaprime
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
-/*
- * Authors:
- * - lambdaprime <intid@protonmail.com>
  */
 package id.imgdups.settings;
 
@@ -38,7 +34,7 @@ public class Settings {
     public Settings() {
         update(System.getProperties());
     }
-    
+
     public static Settings getInstance() {
         return instance;
     }
@@ -46,19 +42,19 @@ public class Settings {
     public ActionType getAction() {
         return action;
     }
-    
+
     public boolean isDevMode() {
         return isDevMode;
     }
-    
+
     public boolean hasNoUi() {
         return hasNoUi;
     }
-    
+
     public Optional<Path> getTargetFolder() {
         return targetFolder;
     }
-    
+
     @Override
     public String toString() {
         var buf = new StringBuilder();
@@ -73,8 +69,6 @@ public class Settings {
         action = ActionType.valueOf(properties.getProperty("action", "FIND_DUPS").toUpperCase());
         isDevMode = Boolean.parseBoolean(properties.getProperty("isDevMode", "false"));
         hasNoUi = Boolean.parseBoolean(properties.getProperty("hasNoUi", "false"));
-        targetFolder = Optional.ofNullable(properties.getProperty("targetFolder"))
-                .map(Paths::get);
+        targetFolder = Optional.ofNullable(properties.getProperty("targetFolder")).map(Paths::get);
     }
-    
 }
