@@ -5,16 +5,10 @@ plugins {
 
 apply plugin : 'eclipse'
 
-eclipse.classpath.file {
-  // instruct eclipse plugin to put everything to module path
-  whenMerged {
-    entries.findAll { it.kind == 'lib' }.each { it.entryAttributes['module'] = 'true' }
-  }
-}
-
 dependencies {
-  implementation fileTree(include: ['*.jar'], dir: 'libs')
-  implementation fileTree(include: ['*.jar'], dir: '/usr/share/java')
+  implementation 'io.github.lambdaprime:id.xfunction:23.0-SNAPSHOT'
+  implementation 'io.github.lambdaprime:matcv:3.0'
+  implementation files('/usr/share/java/opencv.jar')
 }
 
 configurations {

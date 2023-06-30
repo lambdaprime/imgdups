@@ -18,12 +18,12 @@
 package id.imgdups.scale;
 
 import id.xfunction.cli.CommandLineInterface;
+import id.xfunction.cli.CommandOptions;
 import id.xfunction.nio.file.XPaths;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -41,7 +41,7 @@ public class ScaleImages {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    public ScaleImages(CommandLineInterface cli, Properties properties) {
+    public ScaleImages(CommandLineInterface cli, CommandOptions properties) {
         this.cli = cli;
         settings.update(properties);
     }

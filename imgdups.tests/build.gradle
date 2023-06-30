@@ -3,15 +3,9 @@ plugins {
   id 'jacoco'
 }
 
-eclipse.classpath.file {
-  // instruct eclipse plugin to put everything to module path
-  whenMerged {
-    entries.findAll { it.kind == 'lib' }.each { it.entryAttributes['module'] = 'true' }
-  }
-}
-
 dependencies {
   testImplementation project(':imgdups')
+  implementation 'io.github.lambdaprime:id.xfunctiontests:1.0-SNAPSHOT'
 
   def junitVersion = "5.8.1"
   testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"

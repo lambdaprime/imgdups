@@ -50,7 +50,7 @@ import javax.swing.UIManager;
  * |     size   |
  * --------------
  * </pre>
- * 
+ *
  * @author lambdaprime <intid@protonmail.com>
  */
 public class ImageDetailsPanel extends JPanel implements ActionListener {

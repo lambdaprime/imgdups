@@ -21,15 +21,12 @@ import id.imgdups.finddups.FindDups;
 import id.imgdups.scale.ScaleImages;
 import id.imgdups.settings.Settings;
 import id.xfunction.ResourceUtils;
-import id.xfunction.cli.ArgsUtils;
 import id.xfunction.cli.ArgumentParsingException;
 import id.xfunction.cli.CommandLineInterface;
-import id.xfunction.util.XCollections;
+import id.xfunction.cli.CommandOptions;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
-import java.util.Set;
 import javax.swing.JFileChooser;
 
 /**
@@ -38,7 +35,7 @@ import javax.swing.JFileChooser;
 public class ImgdupsApp {
 
     private static final ResourceUtils resourceUtils = new ResourceUtils();
-    private static final ArgsUtils argsUtils = new ArgsUtils();
+    private static CommandOptions argsUtils;
     private Settings settings = Settings.getInstance();
     private CommandLineInterface cli;
 
@@ -62,9 +59,9 @@ public class ImgdupsApp {
     }
 
     private void run(String[] args) throws Exception {
-        Properties properties = argsUtils.collectOptions(args);
-        if (XCollections.isIntersects(properties.keySet(), Set.of("h", "help"))) {
-            throw new ArgumentParsingException();
+        var properties = argsUtils.collectOptions(args);
+        if (properties.getOption("h").isPresent() || properties.getOption("help").isPresent()) {
+            throw new ArgumentParsingException("");
         }
         settings.update(properties);
         cli.print(settings);

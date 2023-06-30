@@ -17,7 +17,7 @@
  */
 package id.imgdups.scale;
 
-import java.util.Properties;
+import id.xfunction.cli.CommandOptions;
 
 public class ScaleImagesSettings {
 
@@ -29,7 +29,7 @@ public class ScaleImagesSettings {
     private boolean isCommutative;
 
     public ScaleImagesSettings() {
-        update(System.getProperties());
+        update(new CommandOptions(System.getProperties()));
     }
 
     public static ScaleImagesSettings getInstance() {
@@ -62,11 +62,11 @@ public class ScaleImagesSettings {
         return buf.toString();
     }
 
-    public void update(Properties properties) {
-        var resolution = properties.getProperty("sourceResolution", "3920x2204").split("x");
+    public void update(CommandOptions properties) {
+        var resolution = properties.getOption("sourceResolution").orElse("3920x2204").split("x");
         sourceWidth = Integer.parseInt(resolution[0]);
         sourceHeight = Integer.parseInt(resolution[1]);
-        scalePercent = Integer.parseInt(properties.getProperty("scalePercent", "70"));
-        isCommutative = Boolean.parseBoolean(properties.getProperty("isCommutative", "false"));
+        scalePercent = Integer.parseInt(properties.getOption("scalePercent").orElse("70"));
+        isCommutative = properties.isOptionTrue("isCommutative");
     }
 }

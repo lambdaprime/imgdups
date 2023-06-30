@@ -22,10 +22,11 @@ import static java.util.stream.Collectors.toList;
 
 import id.imgdups.finddups.viewer.MatchResultsFrame;
 import id.imgdups.settings.Settings;
-import id.opencvkit.feature.descriptor.FileDescriptor;
-import id.opencvkit.feature.match.MatchResult;
-import id.opencvkit.feature.match.Matchers;
+import id.matcv.feature.descriptor.FileDescriptor;
+import id.matcv.feature.match.MatchResult;
+import id.matcv.feature.match.Matchers;
 import id.xfunction.cli.CommandLineInterface;
+import id.xfunction.cli.CommandOptions;
 import id.xfunction.function.Unchecked;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,7 +34,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
@@ -54,7 +54,7 @@ public class FindDups {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    public FindDups(CommandLineInterface cli, Properties properties) {
+    public FindDups(CommandLineInterface cli, CommandOptions properties) {
         this.cli = cli;
         settings.update(properties);
     }

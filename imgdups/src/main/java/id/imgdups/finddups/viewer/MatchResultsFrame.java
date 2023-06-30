@@ -17,7 +17,7 @@
  */
 package id.imgdups.finddups.viewer;
 
-import id.opencvkit.feature.match.MatchResult;
+import id.matcv.feature.match.MatchResult;
 import id.xfunction.lang.XThread;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -165,7 +165,6 @@ public class MatchResultsFrame extends JFrame implements ActionListener, Runnabl
         }
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             showNext();
-            return;
         }
     }
 

@@ -19,8 +19,8 @@ package id.jrosclient.tests.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import id.xfunction.AssertRunCommand;
 import id.xfunction.nio.file.XFiles;
+import id.xfunctiontests.AssertRunCommand;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,8 +48,8 @@ public class ImgdupsAppTests {
     @Test
     public void test_no_args() throws Exception {
         new AssertRunCommand(COMMAND_PATH, "-h")
-                .withOutputFromResource("test_help")
-                .withReturnCode(0)
+                .assertOutputFromResource("test_help")
+                .assertReturnCode(0)
                 .run();
     }
 
@@ -67,9 +67,9 @@ public class ImgdupsAppTests {
                         COMMAND_PATH,
                         "-hasNoUi=true",
                         "-targetFolder=" + targetFolder.toAbsolutePath().toString())
-                .withOutputFromResource("test_finddups")
+                .assertOutputFromResource("test_finddups")
                 .withOutputConsumer(System.out::println)
-                .withReturnCode(0)
+                .assertReturnCode(0)
                 .withWildcardMatching()
                 .withInput(Stream.of("yes\n"))
                 .run();
@@ -84,9 +84,9 @@ public class ImgdupsAppTests {
                         "-action=scale_images",
                         "-targetFolder=" + targetFolder.toAbsolutePath().toString(),
                         "-sourceResolution=1030x700")
-                .withOutputFromResource("test_scale_images")
+                .assertOutputFromResource("test_scale_images")
                 .withOutputConsumer(System.out::println)
-                .withReturnCode(0)
+                .assertReturnCode(0)
                 .withWildcardMatching()
                 .withInput(Stream.of("yes\n"))
                 .run();

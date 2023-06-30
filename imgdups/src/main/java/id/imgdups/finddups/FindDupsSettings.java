@@ -17,10 +17,10 @@
  */
 package id.imgdups.finddups;
 
+import id.xfunction.cli.CommandOptions;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Properties;
 
 /**
  * @author lambdaprime <intid@protonmail.com>
@@ -35,7 +35,7 @@ public class FindDupsSettings {
     private Optional<Path> queryImage;
 
     public FindDupsSettings() {
-        update(System.getProperties());
+        update(new CommandOptions(System.getProperties()));
     }
 
     public static FindDupsSettings getInstance() {
@@ -68,10 +68,10 @@ public class FindDupsSettings {
         return buf.toString();
     }
 
-    public void update(Properties properties) {
-        signatureLength = Integer.parseInt(properties.getProperty("signatureLength", "64"));
-        threshold = Integer.parseInt(properties.getProperty("threshold", "150"));
-        size = Integer.parseInt(properties.getProperty("size", "300"));
-        queryImage = Optional.ofNullable(properties.getProperty("queryImage")).map(Paths::get);
+    public void update(CommandOptions properties) {
+        signatureLength = Integer.parseInt(properties.getOption("signatureLength").orElse("64"));
+        threshold = Integer.parseInt(properties.getOption("threshold").orElse("150"));
+        size = Integer.parseInt(properties.getOption("size").orElse("300"));
+        queryImage = properties.getOption("queryImage").map(Paths::get);
     }
 }

@@ -91,5 +91,3 @@ imgdups -action=scale_images -targetFolder=/google_drive/photos -sourceResolutio
 # Contributors
 
 lambdaprime <intid@protonmail.com>
-
-

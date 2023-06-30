@@ -17,10 +17,10 @@
  */
 package id.imgdups.settings;
 
+import id.xfunction.cli.CommandOptions;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Properties;
 
 public class Settings {
 
@@ -32,7 +32,7 @@ public class Settings {
     private Optional<Path> targetFolder;
 
     public Settings() {
-        update(System.getProperties());
+        update(new CommandOptions(System.getProperties()));
     }
 
     public static Settings getInstance() {
@@ -65,10 +65,12 @@ public class Settings {
         return buf.toString();
     }
 
-    public void update(Properties properties) {
-        action = ActionType.valueOf(properties.getProperty("action", "FIND_DUPS").toUpperCase());
-        isDevMode = Boolean.parseBoolean(properties.getProperty("isDevMode", "false"));
-        hasNoUi = Boolean.parseBoolean(properties.getProperty("hasNoUi", "false"));
-        targetFolder = Optional.ofNullable(properties.getProperty("targetFolder")).map(Paths::get);
+    public void update(CommandOptions properties) {
+        action =
+                ActionType.valueOf(
+                        properties.getOption("action").orElse("FIND_DUPS").toUpperCase());
+        isDevMode = properties.isOptionTrue("isDevMode");
+        hasNoUi = Boolean.parseBoolean(properties.getOption("hasNoUi").orElse("false"));
+        targetFolder = properties.getOption("targetFolder").map(Paths::get);
     }
 }

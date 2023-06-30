@@ -17,9 +17,9 @@
  */
 package id.imgdups.finddups;
 
-import id.opencvkit.OpencvKit;
-import id.opencvkit.SubmatrixDetector;
-import id.opencvkit.feature.detector.OddPatchesFeatureDetector;
+import id.matcv.OpenCvKit;
+import id.matcv.SubmatrixDetector;
+import id.matcv.feature.detector.OddPatchesFeatureDetector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,6 +28,7 @@ import org.opencv.core.Mat;
 
 public class RgbMeanDescriptorExtractor implements Function<Mat, Mat> {
 
+    private static final OpenCvKit cvKit = new OpenCvKit();
     private int descriptorLen;
 
     public RgbMeanDescriptorExtractor(int descriptorLen) {
@@ -43,6 +44,6 @@ public class RgbMeanDescriptorExtractor implements Function<Mat, Mat> {
                         .peek(new SubmatrixDetector(mat))
                         .map(patch -> Core.mean(patch))
                         .collect(Collectors.toList());
-        return OpencvKit.toFlatMatrix(means);
+        return cvKit.toFlatMatrix(means);
     }
 }
