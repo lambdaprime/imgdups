@@ -39,11 +39,13 @@ Once scanning completes it will allow you to navigate over the duplicate images 
 
 `-signatureLength=NUMBER` - length of the image signature to use. This property is optional.
 
-`-threshold=NUMBER` - treshold below which to consider two images as duplicates. This property is optional.
+`-threshold=NUMBER` - treshold below which to consider two images as duplicates. Threshold is a distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates. This property is optional (default is 150).
 
 `-size=NUMBER` - control resize in comparison algorithm. This property is optional.
 
 ## scale_images
+
+Scale images which size exceeds `sourceResolution`. Scaled images are saved with postfix "_scaled".
 
 `-sourceResolution=<RESOLUTION>` - images with what resolution to scale. This property is optional (default is `3920x2204`)
 

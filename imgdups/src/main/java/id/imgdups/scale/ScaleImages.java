@@ -62,33 +62,39 @@ public class ScaleImages {
 
     private void resize(Path path) {
         var img = readRgbImage(path);
-        if (img.empty()) return;
-        if (!settings.isCommutative()) {
-            if (img.height() != settings.getSourceHeight()) return;
-            if (img.width() != settings.getSourceWidth()) return;
-        } else {
-            var actual = List.of(img.height(), img.width());
-            var source = List.of(settings.getSourceHeight(), settings.getSourceWidth());
-            if (!actual.containsAll(source)) return;
-        }
-        cli.print("Scaling image " + path);
-        var newSize = targetSize;
-        var isRotated = img.height() != settings.getSourceHeight();
-        if (isRotated) {
-            newSize = new Size(newSize.height, newSize.width);
-        }
-        Imgproc.resize(img, img, newSize);
-        var fileName = XPaths.splitFileName(path.getFileName().toString());
-        fileName[1] = Optional.ofNullable(fileName[1]).orElse("");
-        var newFileName = fileName[0] + "_scaled." + fileName[1];
-        String outputFile = path.resolveSibling(newFileName).toAbsolutePath().toString();
-        switch (fileName[1].toLowerCase()) {
-            case "jpg":
-                Imgcodecs.imwrite(
-                        outputFile, img, new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 80));
-                break;
-            default:
-                Imgcodecs.imwrite(outputFile, img);
+        try {
+            if (img.empty()) return;
+            if (!settings.isCommutative()) {
+                if (img.height() != settings.getSourceHeight()) return;
+                if (img.width() != settings.getSourceWidth()) return;
+            } else {
+                var actual = List.of(img.height(), img.width());
+                var source = List.of(settings.getSourceHeight(), settings.getSourceWidth());
+                if (!actual.containsAll(source)) return;
+            }
+            cli.print("Scaling image " + path);
+            var newSize = targetSize;
+            var isRotated = img.height() != settings.getSourceHeight();
+            if (isRotated) {
+                newSize = new Size(newSize.height, newSize.width);
+            }
+            Imgproc.resize(img, img, newSize);
+            var fileName = XPaths.splitFileName(path.getFileName().toString());
+            fileName[1] = Optional.ofNullable(fileName[1]).orElse("");
+            var newFileName = fileName[0] + "_scaled." + fileName[1];
+            String outputFile = path.resolveSibling(newFileName).toAbsolutePath().toString();
+            switch (fileName[1].toLowerCase()) {
+                case "jpg":
+                    Imgcodecs.imwrite(
+                            outputFile, img, new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 80));
+                    break;
+                default:
+                    Imgcodecs.imwrite(outputFile, img);
+            }
+        } finally {
+            // releasing Mat explicitly helped to fix OOM
+            // apparently GC does not work for Mat
+            img.release();
         }
     }
 
