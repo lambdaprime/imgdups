@@ -23,6 +23,8 @@ Once you run **imgdups** command it will ask you select folder for scanning.
 
 Once scanning completes it will allow you to navigate over the duplicate images and chose which one you want to delete.
 
+[![Screen](imgs/screen.jpg)](imgs/screen.jpg)
+
 # Configuration
 
 **imgdups** command accepts following properties which can be used to configure it.
@@ -37,11 +39,11 @@ Once scanning completes it will allow you to navigate over the duplicate images 
 
 ## finddups
 
-`-signatureLength=NUMBER` - length of the image signature to use. This property is optional.
+`-signatureLength=NUMBER` - length of the image signature to use (see details below). This property is optional (default is 64).
 
 `-threshold=NUMBER` - treshold below which to consider two images as duplicates. Threshold is a distance between matched descriptors. Distance means here metric distance (e.g. Hamming distance), not the distance between coordinates. This property is optional (default is 150).
 
-`-size=NUMBER` - control resize in comparison algorithm. This property is optional.
+`-size=NUMBER` - control resize in comparison algorithm (see details below). This property is optional (default is 300).
 
 ## scale_images
 
