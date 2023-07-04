@@ -29,7 +29,7 @@ Once scanning completes it will allow you to navigate over the duplicate images 
 
 ## General
 
-`-action=<find_dups|scale_images>` - specifies what action should be performed. Each action has its own set of properties which can be configured. This property is optional (default action is `find_dups`)
+`-action=<find_dups|scale_images|compress_video>` - specifies what action should be performed. Each action has its own set of properties which can be configured. This property is optional (default action is `find_dups`)
 
 `-isDevMode=<true|false>` - has no special meaning outside of development. When run inside IDE it will run scanning for the predefined "samples" folder (so you don't have to chose it each time). This property is optional (default is `false`)
 
@@ -52,6 +52,10 @@ Scale images which size exceeds `sourceResolution`. Scaled images are saved with
 `-scalePercent=NUMBER` - percentage by which images will be scaled. This property is optional (default is `70` which means that they will be reduced in size)
 
 `isCommutative=<true|false>` - by default resolution of images need to match sourceResolution exactly. For example if the image is 123x456 and sourceResolution is 456x123 then image will not be scaled. This property allows to make resolution matching commutative so that images with 123x456 and 456x123 will be scaled. This property is optional (default is `false`)
+
+## compress_video
+
+Compress mp4 video files with `ffmpeg` command (it needs to be installed and available in the system).
 
 # Implementation
 

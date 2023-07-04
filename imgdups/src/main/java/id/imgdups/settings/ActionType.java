@@ -19,5 +19,6 @@ package id.imgdups.settings;
 
 public enum ActionType {
     FIND_DUPS,
-    SCALE_IMAGES
+    SCALE_IMAGES,
+    COMPRESS_VIDEO
 }

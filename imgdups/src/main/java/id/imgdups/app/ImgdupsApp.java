@@ -17,6 +17,7 @@
  */
 package id.imgdups.app;
 
+import id.imgdups.compressvideo.CompressVideo;
 import id.imgdups.finddups.FindDups;
 import id.imgdups.scale.ScaleImages;
 import id.imgdups.settings.Settings;
@@ -35,7 +36,6 @@ import javax.swing.JFileChooser;
 public class ImgdupsApp {
 
     private static final ResourceUtils resourceUtils = new ResourceUtils();
-    private static CommandOptions argsUtils;
     private Settings settings = Settings.getInstance();
     private CommandLineInterface cli;
 
@@ -59,7 +59,7 @@ public class ImgdupsApp {
     }
 
     private void run(String[] args) throws Exception {
-        var properties = argsUtils.collectOptions(args);
+        var properties = CommandOptions.collectOptions(args);
         if (properties.getOption("h").isPresent() || properties.getOption("help").isPresent()) {
             throw new ArgumentParsingException("");
         }
@@ -68,12 +68,11 @@ public class ImgdupsApp {
         var folder = retrieveTargetFolder();
         cli.print("Folder: " + folder.toAbsolutePath());
         switch (settings.getAction()) {
-            case FIND_DUPS:
-                new FindDups(cli, properties).run(folder);
-                break;
-            case SCALE_IMAGES:
-                new ScaleImages(cli, properties).run(folder);
-                break;
+            case FIND_DUPS -> new FindDups(cli, properties).run(folder);
+            case SCALE_IMAGES -> new ScaleImages(cli, properties).run(folder);
+            case COMPRESS_VIDEO -> new CompressVideo(cli).run(folder);
+            default -> throw new ArgumentParsingException(
+                    "Action not supported: " + settings.getAction());
         }
     }
 

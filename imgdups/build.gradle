@@ -7,7 +7,7 @@ apply plugin : 'eclipse'
 
 dependencies {
   implementation 'io.github.lambdaprime:id.xfunction:23.0-SNAPSHOT'
-  implementation 'io.github.lambdaprime:matcv:3.0'
+  implementation 'io.github.lambdaprime:matcv:4.0-SNAPSHOT'
   implementation files('/usr/share/java/opencv.jar')
 }
 
@@ -16,13 +16,9 @@ configurations {
 }
 
 jar {
-  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   manifest { 
     attributes 'Implementation-Version': "${rootProject.version}",
       'Main-Class': 'id.imgdups.app.ImgdupsApp'
-  }
-  from {
-    configurations.customConfig.collect { it.isDirectory() ? it : zipTree(it) }
   }
 }
 
@@ -37,7 +33,7 @@ task createRelease(type: Zip) {
 }
 
 task copyLibs(type: Copy) {
-    from "$projectDir/libs"
+    from configurations.customConfig
     from jar.archiveFile
     into "${packageDir}/libs"
 }
